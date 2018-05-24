@@ -85,6 +85,25 @@ void initJITBindings(PyObject *module) {
    .def("_jit_pass_onnx_block", BlockToONNX)
    .def("_jit_pass_fixup_onnx_loops", FixupONNXLoops);
 
+  py::class_<ArgumentSpec>(m, "ArgumentSpec");
+  py::class_<Code>(m, "Code");
+
+  py::class_<ExecutionPlanState>(m, "ExecutionPlanState");
+
+  py::class_<GraphExecutorState>(m, "GraphExecutorState")
+    .def_property_readonly("graph", [](GraphExecutorState& s) {
+      return s.graph;
+    })
+    .def_property_readonly("execution_plans", [](GraphExecutorState& s) {
+      return s.execution_plans;
+    })
+    .def_property_readonly("autograd_fallback", [](GraphExecutorState& s) {
+      return s.autograd_fallback;
+    })
+    .def_property_readonly("autograd_fallback_graph", [](GraphExecutorState& s) {
+      return s.autograd_fallback_graph;
+    });
+
   py::class_<GraphExecutor>(m, "GraphExecutor")
       .def(
           py::init([](py::function func,
@@ -109,6 +128,9 @@ void initJITBindings(PyObject *module) {
       .def("graph_for", [](GraphExecutor& ge, py::args args) {
         return ge.graphFor(createVariableTensorList(args));
       })
+      .def("get_debug_state", [](GraphExecutor& ge) {
+        return ge.getDebugState();
+      })
       .def("__call__", [](GraphExecutor& ge, py::args args) -> py::object {
         auto inputs = createVariableTensorList(args);
         auto outputs = ge.run(std::move(inputs));
@@ -127,6 +149,7 @@ void initJITBindings(PyObject *module) {
           return tuple;
         }
       });
+
   initPythonIRBindings(module);
   initPythonTracerBindings(module);
   script::initTreeViewBindings(module);
