@@ -1065,7 +1065,7 @@ test_bazel() {
     bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA \
       --no//c10:use_gflags --no//c10:use_glog //c10/...
 
-    tools/bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA :all_tests
+    bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA :all_tests
   else
     # Increase the test timeout to 480 like CPU tests because modules_test frequently timeout
     bazel test --test_timeout=4800 --test_output=errors \
