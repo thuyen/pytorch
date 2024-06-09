@@ -1062,13 +1062,13 @@ test_bazel() {
     # Test //c10/... without Google flags and logging libraries. The
     # :all_tests target in the subsequent Bazel invocation tests
     # //c10/... with the Google libraries.
-    tools/bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA \
+    bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA \
       --no//c10:use_gflags --no//c10:use_glog //c10/...
 
     tools/bazel test --config=cpu-only --test_timeout=480 --test_output=all --test_tag_filters=-gpu-required --test_filter=-*CUDA :all_tests
   else
     # Increase the test timeout to 480 like CPU tests because modules_test frequently timeout
-    tools/bazel test --test_timeout=480 --test_output=errors \
+    bazel test --test_timeout=4800 --test_output=errors \
       //:any_test \
       //:autograd_test \
       //:dataloader_test \
