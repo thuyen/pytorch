@@ -12,7 +12,7 @@ cc_library(
 
 cc_import(
     name = "cudnn_lib",
-    shared_library = "lib64/libcudnn.so",
+    shared_library = "lib64/libcudnn.so.8",
     visibility = ["//visibility:private"],
 )
 
